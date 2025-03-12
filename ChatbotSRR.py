@@ -6,6 +6,13 @@ import docx
 import pandas as pd
 from io import BytesIO
 
+dropbox_token = os.environ.get("DROPBOX_ACCESS_TOKEN")
+st.write("Debug DROPBOX_ACCESS_TOKEN:", dropbox_token)
+
+if not dropbox_token:
+    st.error("DROPBOX_ACCESS_TOKEN tidak terbaca! Periksa secrets.toml atau nama variable!")
+    st.stop()
+
 # Import LangChain untuk embeddings, vectorstore, retrieval QA, dan document model
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS

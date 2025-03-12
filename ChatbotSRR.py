@@ -1,4 +1,3 @@
-import os
 import streamlit as st
 import dropbox
 import pdfplumber
@@ -6,8 +5,29 @@ import docx
 import pandas as pd
 from io import BytesIO
 
-user = os.environ.get("DB_USERNAME")
-db_name = os.environ.get("DB_NAME")
+# Akses secrets langsung menggunakan st.secrets
+try:
+    dropbox_token = st.secrets["DROPBOX_ACCESS_TOKEN"]
+    openai_api_key = st.secrets["OPENAI_API_KEY"]
+    # Jika diperlukan, variabel tambahan seperti DB_USERNAME dan DB_NAME:
+    db_username = st.secrets.get("DB_USERNAME")
+    db_name = st.secrets.get("DB_NAME")
+except Exception as e:
+    st.error("Terjadi kesalahan saat membaca secrets: " + str(e))
+    st.stop()
+
+st.write("Debug DROPBOX_ACCESS_TOKEN:", dropbox_token)
+
+if not dropbox_token:
+    st.error("DROPBOX_ACCESS_TOKEN tidak terbaca! Periksa file secrets.toml atau penamaan variabel!")
+    st.stop()
+
+if not openai_api_key:
+    st.error("OPENAI_API_KEY tidak terbaca! Periksa file secrets.toml atau penamaan variabel!")
+    st.stop()
+
+# Inisialisasi klien Dropbox dengan token dari st.secrets
+dbx = dropbox.Dropbox(dropbox_token)
 
 # Import LangChain untuk embeddings, vectorstore, retrieval QA, dan document model
 from langchain_community.embeddings import OpenAIEmbeddings
@@ -15,29 +35,6 @@ from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain_community.llms import OpenAI
 from langchain.docstore.document import Document
-
-# Ambil environment variable
-DROPBOX_ACCESS_TOKEN = os.environ.get("DROPBOX_ACCESS_TOKEN")
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-
-# Pengecekan environment variable
-if not DROPBOX_ACCESS_TOKEN:
-    st.error("Environment variable DROPBOX_ACCESS_TOKEN belum diatur!")
-    st.stop()
-
-if not OPENAI_API_KEY:
-    st.error("Environment variable OPENAI_API_KEY belum diatur!")
-    st.stop()
-
-# Inisialisasi klien Dropbox
-dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
-
-dropbox_token = os.environ.get("DROPBOX_ACCESS_TOKEN")
-st.write("Debug DROPBOX_ACCESS_TOKEN:", dropbox_token)
-
-if not dropbox_token:
-    st.error("DROPBOX_ACCESS_TOKEN tidak terbaca! Periksa secrets.toml atau nama variable!")
-    st.stop()
 
 def download_file_from_dropbox(dropbox_path):
     """Mengunduh file dari Dropbox dan mengembalikan isinya sebagai byte."""
@@ -103,7 +100,7 @@ def load_documents_from_dropbox(folder_path):
 
 def build_vectorstore(docs):
     """Membangun vector store menggunakan FAISS dari dokumen yang diberikan."""
-    embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+    embedding = OpenAIEmbeddings(openai_api_key=openai_api_key)
     vectorstore = FAISS.from_documents(docs, embedding)
     return vectorstore
 
@@ -128,7 +125,7 @@ if st.button("Muat Dokumen"):
         
         # Inisialisasi Retrieval QA chain
         qa = RetrievalQA.from_chain_type(
-            llm=OpenAI(openai_api_key=OPENAI_API_KEY, temperature=0),
+            llm=OpenAI(openai_api_key=openai_api_key, temperature=0),
             chain_type="stuff",
             retriever=vectorstore.as_retriever()
         )

@@ -1,9 +1,9 @@
 streamlit
+langchain
+langchain-community
+openai
 dropbox
 pdfplumber
 python-docx
 pandas
-langchain
-openai
 faiss-cpu
-langchain-community

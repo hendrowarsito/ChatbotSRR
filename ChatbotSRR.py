@@ -15,12 +15,9 @@ from langchain.docstore.document import Document
 
 # Ambil environment variable
 DROPBOX_ACCESS_TOKEN = os.environ.get("DROPBOX_ACCESS_TOKEN")
-if not DROPBOX_ACCESS_TOKEN:
-    st.error("Environment variable DROPBOX_ACCESS_TOKEN belum diatur!")
-    st.stop()
-
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
+# Pengecekan environment variable
 if not DROPBOX_ACCESS_TOKEN:
     st.error("Environment variable DROPBOX_ACCESS_TOKEN belum diatur!")
     st.stop()

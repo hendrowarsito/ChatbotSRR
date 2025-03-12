@@ -7,10 +7,10 @@ import pandas as pd
 from io import BytesIO
 
 # Import LangChain untuk embeddings, vectorstore, retrieval QA, dan document model
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
-from langchain.llms import OpenAI
+from langchain_community.llms import OpenAI
 from langchain.docstore.document import Document
 
 # Ambil environment variable

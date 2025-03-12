@@ -6,6 +6,9 @@ import docx
 import pandas as pd
 from io import BytesIO
 
+user = os.environ.get("DB_USERNAME")
+db_name = os.environ.get("DB_NAME")
+
 dropbox_token = os.environ.get("DROPBOX_ACCESS_TOKEN")
 st.write("Debug DROPBOX_ACCESS_TOKEN:", dropbox_token)
 

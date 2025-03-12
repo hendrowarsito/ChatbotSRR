@@ -9,13 +9,6 @@ from io import BytesIO
 user = os.environ.get("DB_USERNAME")
 db_name = os.environ.get("DB_NAME")
 
-dropbox_token = os.environ.get("DROPBOX_ACCESS_TOKEN")
-st.write("Debug DROPBOX_ACCESS_TOKEN:", dropbox_token)
-
-if not dropbox_token:
-    st.error("DROPBOX_ACCESS_TOKEN tidak terbaca! Periksa secrets.toml atau nama variable!")
-    st.stop()
-
 # Import LangChain untuk embeddings, vectorstore, retrieval QA, dan document model
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
@@ -38,6 +31,13 @@ if not OPENAI_API_KEY:
 
 # Inisialisasi klien Dropbox
 dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
+
+dropbox_token = os.environ.get("DROPBOX_ACCESS_TOKEN")
+st.write("Debug DROPBOX_ACCESS_TOKEN:", dropbox_token)
+
+if not dropbox_token:
+    st.error("DROPBOX_ACCESS_TOKEN tidak terbaca! Periksa secrets.toml atau nama variable!")
+    st.stop()
 
 def download_file_from_dropbox(dropbox_path):
     """Mengunduh file dari Dropbox dan mengembalikan isinya sebagai byte."""

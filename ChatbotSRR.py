@@ -19,8 +19,11 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
 if not DROPBOX_ACCESS_TOKEN:
     st.error("Environment variable DROPBOX_ACCESS_TOKEN belum diatur!")
+    st.stop()
+
 if not OPENAI_API_KEY:
     st.error("Environment variable OPENAI_API_KEY belum diatur!")
+    st.stop()
 
 # Inisialisasi klien Dropbox
 dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)

@@ -6,3 +6,4 @@ pandas
 langchain
 openai
 faiss-cpu
+langchain-community
